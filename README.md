@@ -20,34 +20,85 @@ A Chrome extension that auto-fills credit card application forms on major Austra
 - **SPA compatible** - Works with React, Vue, Angular, and other framework-based forms
 - **Privacy focused** - All data stored locally by default
 
-## Installation
+## Quick Start
 
-### From Source (Developer Mode)
+### Development Setup
 
-1. Clone this repository:
-   ```bash
-   git clone https://github.com/YOUR_USERNAME/pointhacks-autofill.git
-   ```
+```bash
+# Install dependencies
+npm install
 
-2. Open Chrome and navigate to `chrome://extensions/`
+# Build the extension
+npm run build
 
+# Watch for changes (auto-rebuild)
+npm run build:watch
+```
+
+### Load in Chrome
+
+1. Run `npm run build`
+2. Open `chrome://extensions/`
 3. Enable "Developer mode" (toggle in top right)
+4. Click "Load unpacked"
+5. Select the `dist/` directory
 
-4. Click "Load unpacked" and select the cloned directory
+## Project Structure
 
-5. The extension icon will appear in your toolbar
+```
+├── src/
+│   ├── popup/              # Extension popup UI
+│   │   ├── popup.html
+│   │   ├── popup.css
+│   │   └── popup.js
+│   ├── content/            # Content scripts (injected into bank pages)
+│   │   ├── content.js
+│   │   └── content.css
+│   ├── background/         # Service worker
+│   │   └── background.js
+│   ├── lib/                # Shared libraries
+│   │   ├── auth.js         # Firebase authentication
+│   │   ├── sync.js         # Cloud sync
+│   │   ├── firebase-config.js
+│   │   ├── address-lookup.js
+│   │   ├── email-typeahead.js
+│   │   ├── name-typeahead.js
+│   │   ├── occupation-typeahead.js
+│   │   ├── offers.js
+│   │   └── my-cards.js
+│   └── assets/
+│       └── icons/          # Extension icons
+├── scripts/                # Build scripts
+│   ├── build.js            # Copies src to dist
+│   └── zip.js              # Creates distributable ZIP
+├── dist/                   # Built extension (gitignored)
+├── .github/workflows/      # CI/CD
+│   └── ci.yml
+├── manifest.json           # Chrome extension manifest
+├── package.json            # npm scripts & dependencies
+├── eslint.config.js        # ESLint configuration
+├── .prettierrc             # Prettier configuration
+├── README.md
+├── LICENSE
+└── PRIVACY.md
+```
 
-## Usage
+## NPM Scripts
 
-1. Click the extension icon to open the popup
-2. Fill in your personal details, employment info, and financials
-3. Click "Save Locally" to store your profile
-4. Navigate to a supported bank's credit card application page
-5. Click the extension icon and press "Fill Form on Page"
+| Command | Description |
+|---------|-------------|
+| `npm run build` | Build extension to `dist/` |
+| `npm run build:watch` | Watch mode - rebuild on changes |
+| `npm run zip` | Build and create distributable ZIP |
+| `npm run lint` | Run ESLint |
+| `npm run lint:fix` | Fix ESLint issues |
+| `npm run format` | Format code with Prettier |
+| `npm run format:check` | Check formatting |
+| `npm run clean` | Remove `dist/` and ZIP files |
 
 ## Form Fields
 
-The extension supports comprehensive form filling including:
+The extension supports comprehensive form filling:
 
 | Category | Fields |
 |----------|--------|
@@ -60,29 +111,28 @@ The extension supports comprehensive form filling including:
 | Liabilities | Credit limits, balances, loans, BNPL |
 | Identity | Driver licence, passport, Medicare |
 
-## Project Structure
+## CI/CD
 
-```
-├── manifest.json          # Chrome extension manifest (MV3)
-├── popup.html/css/js      # Extension popup UI
-├── content.js/css         # Injected into bank pages for form filling
-├── background.js          # Service worker for OAuth handling
-├── auth.js                # Firebase authentication
-├── sync.js                # Cloud sync functionality
-├── firebase-config.js     # Firebase configuration
-├── address-lookup.js      # Addressify API integration
-├── email-typeahead.js     # Email domain suggestions
-├── name-typeahead.js      # First name suggestions
-├── occupation-typeahead.js # Occupation suggestions
-├── offers.js              # Credit card offers display
-├── my-cards.js            # User's saved cards
-└── icons/                 # Extension icons
+GitHub Actions automatically:
+- Runs ESLint and Prettier checks on PRs
+- Builds the extension
+- Creates ZIP artifacts
+- Publishes releases when tags are pushed (`v*`)
+
+### Creating a Release
+
+```bash
+# Update version in manifest.json and package.json
+npm version patch  # or minor/major
+
+# Push with tags
+git push origin main --tags
 ```
 
 ## Technical Details
 
 - **Manifest Version**: 3 (MV3)
-- **Field Matching**: Collects hints from name, id, placeholder, labels, aria-labels, fieldset legends, and group labels. Normalises text and scores against keyword lists - longest match wins.
+- **Field Matching**: Collects hints from name, id, placeholder, labels, aria-labels, fieldset legends. Normalises text and scores against keyword lists - longest match wins.
 - **Framework Compatibility**: Uses native value setter with input/change event dispatch for React/Vue/Angular compatibility
 - **SPA Support**: Retries filling up to 3 times with 1.5s delays for dynamically loaded forms
 
@@ -90,18 +140,7 @@ The extension supports comprehensive form filling including:
 
 - All profile data is stored locally in Chrome storage by default
 - Cloud sync is optional and requires explicit sign-in
-- No data is sent to third parties except:
-  - Addressify (for address autocomplete, when used)
-  - Firebase (for cloud sync, when signed in)
-
-## Development
-
-No build step required. The extension runs directly from source files.
-
-To modify:
-1. Edit the source files
-2. Go to `chrome://extensions/`
-3. Click the refresh icon on the extension card
+- See [PRIVACY.md](PRIVACY.md) for full privacy policy
 
 ## License
 
