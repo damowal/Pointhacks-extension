@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Point Hacks AutoFill</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="popup">
+
+    <!-- Header -->
+    <div class="header">
+      <div class="header-left">
+        <span class="header-icon">✈️</span>
+        <div>
+          <h1>Point Hacks</h1>
+          <p class="header-sub">Credit Card AutoFill</p>
+        </div>
+      </div>
+      <!-- User indicator (logged in only) -->
+      <div class="user-indicator" id="userIndicator">
+        <img class="user-avatar" id="userAvatar" src="" alt="">
+        <span class="user-initial" id="userInitial"></span>
+        <span class="user-email" id="userEmail"></span>
+        <button class="btn-icon" id="logoutBtn" title="Sign out">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"></path>
+            <polyline points="16,17 21,12 16,7"></polyline>
+            <line x1="21" y1="12" x2="9" y2="12"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Auth View (logged out) -->
+    <div class="auth-view" id="authView">
+      <!-- Tab switcher -->
+      <div class="auth-tabs">
+        <button class="auth-tab active" data-tab="login">Sign In</button>
+        <button class="auth-tab" data-tab="signup">Sign Up</button>
+      </div>
+
+      <!-- Login Form -->
+      <div class="auth-form" id="loginForm">
+        <div class="field">
+          <label for="loginEmail">Email</label>
+          <input type="email" id="loginEmail" placeholder="you@example.com">
+        </div>
+        <div class="field">
+          <label for="loginPassword">Password</label>
+          <input type="password" id="loginPassword" placeholder="Password">
+        </div>
+        <button class="btn btn-fill" id="emailLoginBtn">Sign In with Email</button>
+
+        <div class="divider"><span>or continue with</span></div>
+
+        <div class="oauth-buttons">
+          <button class="btn btn-oauth btn-google" id="googleLoginBtn">
+            <svg width="18" height="18" viewBox="0 0 24 24">
+              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+            </svg>
+            Google
+          </button>
+          <button class="btn btn-oauth btn-apple" id="appleLoginBtn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+            </svg>
+            Apple
+          </button>
+          <button class="btn btn-oauth btn-facebook" id="facebookLoginBtn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="#1877F2">
+              <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+            </svg>
+            Facebook
+          </button>
+        </div>
+
+        <p class="auth-link">
+          <a href="#" id="forgotPasswordLink">Forgot password?</a>
+        </p>
+      </div>
+
+      <!-- Signup Form -->
+      <div class="auth-form" id="signupForm" style="display:none;">
+        <div class="field">
+          <label for="signupEmail">Email</label>
+          <input type="email" id="signupEmail" placeholder="you@example.com">
+        </div>
+        <div class="field">
+          <label for="signupPassword">Password</label>
+          <input type="password" id="signupPassword" placeholder="Min 6 characters">
+        </div>
+        <div class="field">
+          <label for="signupConfirm">Confirm Password</label>
+          <input type="password" id="signupConfirm" placeholder="Confirm password">
+        </div>
+        <button class="btn btn-fill" id="emailSignupBtn">Create Account</button>
+
+        <div class="divider"><span>or continue with</span></div>
+
+        <div class="oauth-buttons">
+          <button class="btn btn-oauth btn-google" id="googleSignupBtn">
+            <svg width="18" height="18" viewBox="0 0 24 24">
+              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+            </svg>
+            Google
+          </button>
+          <button class="btn btn-oauth btn-apple" id="appleSignupBtn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+            </svg>
+            Apple
+          </button>
+          <button class="btn btn-oauth btn-facebook" id="facebookSignupBtn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="#1877F2">
+              <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+            </svg>
+            Facebook
+          </button>
+        </div>
+      </div>
+
+      <!-- Auth message area -->
+      <div class="message-area" id="authMessageArea"></div>
+    </div>
+
+    <!-- Main View (logged in) -->
+    <div class="main-view" id="mainView" style="display:none;">
+
+      <!-- Bank status bar -->
+      <div class="status-bar" id="statusBar">
+        <span class="status-dot" id="statusDot"></span>
+        <span class="status-text" id="statusText">Open a supported bank site to begin</span>
+      </div>
+
+      <!-- Special Offers Section -->
+      <div class="offers-section">
+        <div class="offers-header">
+          <span class="offers-title">Best Offers</span>
+          <a href="https://www.pointhacks.com.au/credit-cards/" target="_blank" class="offers-see-all">See all</a>
+        </div>
+        <div class="offers-carousel" id="offersCarousel">
+          <!-- Offers loaded dynamically -->
+        </div>
+      </div>
+
+      <!-- Supported banks chips -->
+      <div class="banks-row">
+        <a class="bank-chip" data-bank="ANZ" href="https://www.anz.com.au/personal/credit-cards/" target="_blank">ANZ</a>
+        <a class="bank-chip" data-bank="NAB" href="https://www.nab.com.au/personal/credit-cards" target="_blank">NAB</a>
+        <a class="bank-chip" data-bank="Commonwealth Bank" href="https://www.commbank.com.au/credit-cards.html" target="_blank">CBA</a>
+        <a class="bank-chip" data-bank="Westpac" href="https://www.westpac.com.au/personal-banking/credit-cards/" target="_blank">Westpac</a>
+        <a class="bank-chip" data-bank="American Express" href="https://www.americanexpress.com/au/credit-cards/" target="_blank">Amex</a>
+        <button class="open-all-btn" id="openAllBanksBtn" title="Open all banks">All</button>
+      </div>
+
+      <!-- Sync status bar -->
+      <div class="sync-bar" id="syncBar">
+        <span class="sync-icon" id="syncIcon">&#9729;</span>
+        <span class="sync-text" id="syncText">Synced</span>
+      </div>
+
+      <!-- Scrollable form body -->
+      <div class="form-body">
+
+        <!-- Personal Details -->
+        <div class="section-label">Personal Details</div>
+
+        <div class="row">
+          <div class="field">
+            <label for="salutation">Title</label>
+            <select id="salutation">
+              <option value="">—</option>
+              <option value="mr">Mr</option>
+              <option value="mrs">Mrs</option>
+              <option value="ms">Ms</option>
+              <option value="miss">Miss</option>
+              <option value="dr">Dr</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="gender">Gender</label>
+            <select id="gender">
+              <option value="">—</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="field field-autocomplete">
+            <label for="firstName">First Name</label>
+            <input type="text" id="firstName" placeholder="John" autocomplete="off">
+            <div class="autocomplete-dropdown" id="firstNameDropdown"></div>
+          </div>
+          <div class="field">
+            <label for="middleName">Middle Name</label>
+            <input type="text" id="middleName" placeholder="William">
+          </div>
+          <div class="field">
+            <label for="lastName">Last Name</label>
+            <input type="text" id="lastName" placeholder="Smith">
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label for="dob">Date of Birth</label>
+            <input type="text" id="dob" placeholder="DD/MM/YYYY">
+          </div>
+          <div class="field">
+            <label for="maritalStatus">Marital Status</label>
+            <select id="maritalStatus">
+              <option value="">—</option>
+              <option value="single">Single</option>
+              <option value="married">Married</option>
+              <option value="de_facto">De Facto</option>
+              <option value="divorced">Divorced</option>
+              <option value="widowed">Widowed</option>
+              <option value="separated">Separated</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="dependents">Dependents</label>
+            <input type="text" id="dependents" placeholder="0">
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="field field-autocomplete">
+            <label for="email">Email</label>
+            <input type="email" id="email" placeholder="john@example.com" autocomplete="off">
+            <div class="autocomplete-dropdown" id="emailDropdown"></div>
+          </div>
+          <div class="field">
+            <label for="phone">Mobile Phone</label>
+            <input type="tel" id="phone" placeholder="04XX XXX XXX">
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label for="citizenship">Citizenship</label>
+            <select id="citizenship">
+              <option value="">—</option>
+              <option value="citizen">Australian Citizen</option>
+              <option value="permanent_resident">Permanent Resident</option>
+              <option value="visa_holder">Visa Holder</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Current Address -->
+        <div class="section-label">Current Address</div>
+
+        <!-- Address Search -->
+        <div class="row">
+          <div class="field field-autocomplete">
+            <label for="addressSearch">Search Address</label>
+            <input type="text" id="addressSearch"
+                   placeholder="Start typing your address..."
+                   autocomplete="off">
+            <div class="autocomplete-dropdown" id="addressDropdown"></div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label for="address1">Street Address</label>
+            <input type="text" id="address1" placeholder="123 Main Street">
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label for="address2">Unit / Apt / Floor</label>
+            <input type="text" id="address2" placeholder="Unit 4">
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label for="suburb">Suburb</label>
+            <input type="text" id="suburb" placeholder="Sydney">
+          </div>
+          <div class="field">
+            <label for="state">State</label>
+            <select id="state">
+              <option value="">—</option>
+              <option value="NSW">NSW</option>
+              <option value="VIC">VIC</option>
+              <option value="QLD">QLD</option>
+              <option value="SA">SA</option>
+              <option value="WA">WA</option>
+              <option value="TAS">TAS</option>
+              <option value="NT">NT</option>
+              <option value="ACT">ACT</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label for="postcode">Postcode</label>
+            <input type="text" id="postcode" placeholder="2000" maxlength="4">
+          </div>
+          <div class="field">
+            <label for="yearsAtAddress">Years at Address</label>
+            <input type="text" id="yearsAtAddress" placeholder="3">
+          </div>
+          <div class="field">
+            <label for="residentialStatus">Residential Status</label>
+            <select id="residentialStatus">
+              <option value="">—</option>
+              <option value="own">Own Home</option>
+              <option value="mortgage">Mortgaged</option>
+              <option value="rent">Renting</option>
+              <option value="board">Boarding</option>
+              <option value="parents">Living with Parents</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Employment & Income -->
+        <div class="section-label">Employment &amp; Income</div>
+
+        <div class="row">
+          <div class="field">
+            <label for="employmentStatus">Employment Status</label>
+            <select id="employmentStatus">
+              <option value="">—</option>
+              <option value="employed">Employed</option>
+              <option value="self_employed">Self-Employed</option>
+              <option value="unemployed">Unemployed</option>
+              <option value="retired">Retired</option>
+              <option value="student">Student</option>
+              <option value="homemaker">Homemaker</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="employmentType">Employment Type</label>
+            <select id="employmentType">
+              <option value="">—</option>
+              <option value="full_time">Full-Time</option>
+              <option value="part_time">Part-Time</option>
+              <option value="casual">Casual</option>
+              <option value="contract">Contract</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label for="employer">Employer Name</label>
+            <input type="text" id="employer" placeholder="ACME Corp">
+          </div>
+          <div class="field">
+            <label for="employerPhone">Employer Phone</label>
+            <input type="tel" id="employerPhone" placeholder="02 XXXX XXXX">
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="field field-autocomplete">
+            <label for="occupation">Occupation</label>
+            <input type="text" id="occupation" placeholder="Software Engineer" autocomplete="off">
+            <div class="autocomplete-dropdown" id="occupationDropdown"></div>
+          </div>
+          <div class="field">
+            <label for="industry">Industry</label>
+            <input type="text" id="industry" placeholder="Technology">
+          </div>
+          <div class="field">
+            <label for="yearsAtEmployer">Years at Employer</label>
+            <input type="text" id="yearsAtEmployer" placeholder="2">
+          </div>
+        </div>
+
+        <!-- Financials -->
+        <div class="section-label">Financials</div>
+
+        <div class="row">
+          <div class="field">
+            <label for="annualIncome">Gross Annual Income ($)</label>
+            <input type="text" id="annualIncome" placeholder="120,000">
+          </div>
+          <div class="field">
+            <label for="otherIncome">Other Income ($)</label>
+            <input type="text" id="otherIncome" placeholder="0">
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label for="rentMortgage">Rent/Mortgage ($/mth)</label>
+            <input type="text" id="rentMortgage" placeholder="2,000">
+          </div>
+          <div class="field">
+            <label for="groceries">Groceries ($/mth)</label>
+            <input type="text" id="groceries" placeholder="600">
+          </div>
+          <div class="field">
+            <label for="transport">Transport ($/mth)</label>
+            <input type="text" id="transport" placeholder="300">
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label for="utilities">Utilities ($/mth)</label>
+            <input type="text" id="utilities" placeholder="200">
+          </div>
+          <div class="field">
+            <label for="insurance">Insurance ($/mth)</label>
+            <input type="text" id="insurance" placeholder="150">
+          </div>
+          <div class="field">
+            <label for="entertainment">Entertainment ($/mth)</label>
+            <input type="text" id="entertainment" placeholder="200">
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label for="childcare">Childcare ($/mth)</label>
+            <input type="text" id="childcare" placeholder="0">
+          </div>
+          <div class="field">
+            <label for="education">Education ($/mth)</label>
+            <input type="text" id="education" placeholder="0">
+          </div>
+          <div class="field">
+            <label for="monthlyExpenses">Other Expenses ($/mth)</label>
+            <input type="text" id="monthlyExpenses" placeholder="500">
+          </div>
+        </div>
+
+        <!-- Assets & Liabilities -->
+        <div class="section-label">Assets &amp; Liabilities</div>
+
+        <div class="row">
+          <div class="field">
+            <label for="propertyValue">Property Value ($)</label>
+            <input type="text" id="propertyValue" placeholder="0">
+          </div>
+          <div class="field">
+            <label for="vehicleValue">Vehicle Value ($)</label>
+            <input type="text" id="vehicleValue" placeholder="20,000">
+          </div>
+          <div class="field">
+            <label for="savings">Savings ($)</label>
+            <input type="text" id="savings" placeholder="10,000">
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label for="totalCreditLimit">Total Credit Limits ($)</label>
+            <input type="text" id="totalCreditLimit" placeholder="10,000">
+          </div>
+          <div class="field">
+            <label for="creditCardBalance">Credit Card Balance ($)</label>
+            <input type="text" id="creditCardBalance" placeholder="0">
+          </div>
+          <div class="field">
+            <label for="numCreditCards">No. of Credit Cards</label>
+            <input type="text" id="numCreditCards" placeholder="1">
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label for="loanBalance">Other Loan Balance ($)</label>
+            <input type="text" id="loanBalance" placeholder="0">
+          </div>
+          <div class="field">
+            <label for="loanRepayment">Loan Repayment ($/mth)</label>
+            <input type="text" id="loanRepayment" placeholder="0">
+          </div>
+          <div class="field">
+            <label for="bnplBalance">BNPL Balance ($)</label>
+            <input type="text" id="bnplBalance" placeholder="0">
+          </div>
+        </div>
+
+        <!-- Identity Verification -->
+        <div class="section-label">Identity Verification</div>
+
+        <div class="row">
+          <div class="field">
+            <label for="licenceNumber">Driver Licence No.</label>
+            <input type="text" id="licenceNumber" placeholder="12345678">
+          </div>
+          <div class="field">
+            <label for="licenceState">Licence State</label>
+            <select id="licenceState">
+              <option value="">—</option>
+              <option value="NSW">NSW</option>
+              <option value="VIC">VIC</option>
+              <option value="QLD">QLD</option>
+              <option value="SA">SA</option>
+              <option value="WA">WA</option>
+              <option value="TAS">TAS</option>
+              <option value="NT">NT</option>
+              <option value="ACT">ACT</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label for="passportNumber">Passport Number</label>
+            <input type="text" id="passportNumber" placeholder="PA1234567">
+          </div>
+          <div class="field">
+            <label for="passportCountry">Passport Country</label>
+            <input type="text" id="passportCountry" placeholder="Australia">
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label for="medicareNumber">Medicare Number</label>
+            <input type="text" id="medicareNumber" placeholder="1234 56789 0">
+          </div>
+          <div class="field">
+            <label for="medicareRef">Medicare Ref</label>
+            <input type="text" id="medicareRef" placeholder="1">
+          </div>
+        </div>
+
+      </div><!-- end form-body -->
+
+      <!-- Action buttons -->
+      <div class="actions">
+        <button class="btn btn-fill" id="fillBtn">Fill Form on Page</button>
+        <div class="btn-row">
+          <button class="btn btn-save" id="saveBtn">Save Locally</button>
+          <button class="btn btn-sync" id="syncBtn">Sync to Cloud</button>
+        </div>
+      </div>
+
+      <!-- Status message -->
+      <div class="message-area" id="messageArea"></div>
+
+    </div><!-- end main-view -->
+
+    <!-- Loading overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+      <div class="spinner"></div>
+      <p id="loadingText">Loading...</p>
+    </div>
+
+    <!-- My Cards Panel -->
+    <div class="my-cards-panel" id="myCardsPanel">
+      <div class="my-cards-header">
+        <button class="my-cards-back" id="myCardsBack">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="15,18 9,12 15,6"></polyline>
+          </svg>
+        </button>
+        <span class="my-cards-title">My Cards</span>
+      </div>
+      <div class="my-cards-list" id="myCardsList">
+        <!-- Cards loaded dynamically -->
+      </div>
+    </div>
+
+  </div><!-- end popup -->
+
+  <script src="firebase-config.js"></script>
+  <script src="auth.js"></script>
+  <script src="address-lookup.js"></script>
+  <script src="email-typeahead.js"></script>
+  <script src="name-typeahead.js"></script>
+  <script src="occupation-typeahead.js"></script>
+  <script src="sync.js"></script>
+  <script src="offers.js"></script>
+  <script src="my-cards.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

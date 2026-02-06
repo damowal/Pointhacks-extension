@@ -1,0 +1,302 @@
+/* ─── Filled-field highlight  ─────────────────────────────────────────── */
+.cc-af-filled {
+  border-color:      #CC0000 !important;
+  box-shadow:        0 0 0 3px rgba(204, 0, 0, 0.22) !important;
+  background-color:  #fff5f5 !important;
+  transition:        border-color 0.3s ease,
+                     box-shadow   0.3s ease,
+                     background-color 0.3s ease !important;
+}
+
+/* ─── Toast notification  ─────────────────────────────────────────────── */
+.cc-af-toast {
+  position:   fixed;
+  top:        22px;
+  right:      22px;
+  display:    flex;
+  align-items: center;
+  gap:        12px;
+  padding:    13px 18px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size:  14px;
+  font-weight: 500;
+  color:      #1e293b;
+  z-index:    2147483647;          /* max 32-bit signed int — above everything */
+
+  /* Start off-screen to the right */
+  transform:  translateX(calc(100% + 40px));
+  transition: transform 0.36s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  border-left: 4px solid #CC0000;
+}
+
+/* Visible state — triggered by JS after one rAF */
+.cc-af-toast--visible {
+  transform: translateX(0);
+}
+
+/* Colour variants */
+.cc-af-toast--ok   { border-left-color: #22c55e; }
+.cc-af-toast--warn { border-left-color: #f59e0b; }
+
+/* Icon circle */
+.cc-af-toast-icon {
+  width:            30px;
+  height:           30px;
+  flex-shrink:      0;
+  display:          flex;
+  align-items:      center;
+  justify-content:  center;
+  border-radius:    50%;
+  font-size:        16px;
+}
+
+.cc-af-toast--ok   .cc-af-toast-icon { background: #dcfce7; color: #16a34a; }
+.cc-af-toast--warn .cc-af-toast-icon { background: #fef9c3; color: #ca8a04; }
+
+/* Message text */
+.cc-af-toast-msg {
+  white-space: nowrap;
+  line-height: 1.3;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   CRO TIPS SYSTEM — In-page guidance to improve form completion
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ─── Tip Box Container ────────────────────────────────────────────────── */
+.ph-cro-tips {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: linear-gradient(135deg, #fefce8 0%, #fef9c3 100%);
+  border: 1px solid #fcd34d;
+  border-left: 4px solid #f59e0b;
+  border-radius: 8px;
+  margin: 12px 0;
+  padding: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+  animation: phTipSlideIn 0.4s ease-out;
+}
+
+@keyframes phTipSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.ph-cro-tips--hidden {
+  animation: phTipSlideOut 0.3s ease-out forwards;
+}
+
+@keyframes phTipSlideOut {
+  to {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
+/* ─── Tip Box Header ───────────────────────────────────────────────────── */
+.ph-cro-tips-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: rgba(245, 158, 11, 0.15);
+  border-bottom: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+.ph-cro-tips-icon {
+  font-size: 16px;
+}
+
+.ph-cro-tips-title {
+  flex: 1;
+  font-size: 13px;
+  font-weight: 700;
+  color: #92400e;
+}
+
+.ph-cro-tips-close {
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: #92400e;
+  cursor: pointer;
+  padding: 2px 6px;
+  line-height: 1;
+  border-radius: 4px;
+  opacity: 0.6;
+  transition: opacity 0.2s, background 0.2s;
+}
+
+.ph-cro-tips-close:hover {
+  opacity: 1;
+  background: rgba(0, 0, 0, 0.08);
+}
+
+/* ─── Tip Box Body ─────────────────────────────────────────────────────── */
+.ph-cro-tips-body {
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* ─── Individual Tips ──────────────────────────────────────────────────── */
+.ph-cro-tip {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #78350f;
+}
+
+.ph-cro-tip-icon {
+  flex-shrink: 0;
+  font-size: 14px;
+}
+
+.ph-cro-tip-text {
+  flex: 1;
+}
+
+/* Tip type variants */
+.ph-cro-tip--trust .ph-cro-tip-text {
+  color: #166534;
+}
+
+.ph-cro-tip--social .ph-cro-tip-text {
+  color: #1e40af;
+}
+
+.ph-cro-tip--momentum .ph-cro-tip-text {
+  color: #7c2d12;
+  font-weight: 600;
+}
+
+.ph-cro-tip--urgency .ph-cro-tip-text {
+  color: #b91c1c;
+  font-weight: 600;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   PROGRESS INDICATOR — Fixed bottom bar showing completion status
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.ph-cro-progress {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 2147483640;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  animation: phProgressSlideIn 0.5s ease-out;
+}
+
+@keyframes phProgressSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.ph-cro-progress-inner {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+  padding: 12px 16px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Minimized state */
+.ph-cro-progress--minimized .ph-cro-progress-inner {
+  padding: 8px 12px;
+}
+
+.ph-cro-progress--minimized .ph-cro-progress-stats {
+  display: none;
+}
+
+.ph-cro-progress--minimized .ph-cro-progress-minimize {
+  transform: rotate(180deg);
+}
+
+/* Brand section */
+.ph-cro-progress-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ph-cro-progress-logo {
+  font-size: 18px;
+}
+
+.ph-cro-progress-name {
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.3px;
+}
+
+/* Stats section */
+.ph-cro-progress-stats {
+  display: flex;
+  gap: 16px;
+}
+
+.ph-cro-progress-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.ph-cro-progress-value {
+  font-size: 16px;
+  font-weight: 700;
+  color: #22c55e;
+}
+
+.ph-cro-progress-label {
+  font-size: 9px;
+  color: #9ca3af;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Minimize button */
+.ph-cro-progress-minimize {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: #9ca3af;
+  font-size: 16px;
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, color 0.2s, transform 0.3s;
+}
+
+.ph-cro-progress-minimize:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
